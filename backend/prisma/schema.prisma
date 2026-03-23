@@ -6,6 +6,7 @@ generator client {
 // db connection.
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 // routes table. base data.

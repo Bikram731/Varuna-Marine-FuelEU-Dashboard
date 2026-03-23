@@ -1,27 +1,19 @@
-/// <reference types="node" />
-import * as dotenv from 'dotenv';
-// Force load .env immediately before doing anything else
-dotenv.config(); 
+require('dotenv').config();
+const { PrismaClient } = require('@prisma/client');
 
-import { PrismaClient } from '@prisma/client';
-
-// We pass 'log' to satisfy the "non-empty object" requirement safely 
-// without triggering the datasource naming bug.
-const prisma = new PrismaClient({
-  log: ['info', 'warn', 'error']
-});
+const prisma = new PrismaClient();
 
 async function main() {
-  console.log('🚀 Seeding Varuna Marine FuelEU Data...');
+  console.log('🚀 Seeding via Pure JS...');
 
-  // 1. Clear existing data
+  // Clear old data just in case
   await prisma.poolMember.deleteMany();
   await prisma.pool.deleteMany();
   await prisma.bankEntry.deleteMany();
   await prisma.shipCompliance.deleteMany();
   await prisma.route.deleteMany();
 
-  // 2. Insert the KPIs Dataset
+  // Insert fresh data
   await prisma.route.createMany({
     data: [
       { routeId: 'R001', vesselType: 'Container', fuelType: 'HFO', year: 2024, ghgIntensity: 91.0, fuelConsumption: 5000, distance: 12000, totalEmissions: 4500, isBaseline: false },
@@ -35,11 +27,4 @@ async function main() {
   console.log('✅ Seeding complete.');
 }
 
-main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+main().catch(console.error).finally(() => prisma.$disconnect());

@@ -28,7 +28,11 @@ app.use(express.json());
 
 // initialize database client.
 const prisma = new PrismaClient({
-  datasourceUrl: process.env.DATABASE_URL as string
+  datasources: {
+    db: {
+      url: process.env.DATABASE_URL
+    }
+  }
 } as any);
 
 // dependency injection wiring.
