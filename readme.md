@@ -8,7 +8,7 @@ A professional-grade, full-stack dashboard built to monitor vessel GHG intensity
 ![Fleet Routes](./docs/routes.png)
 
 ### 2. Baseline Comparison Analytics
-![Baseline Comparison](./docs/docs/comparison.png)
+![Baseline Comparison](./docs/comparison.png)
 
 ---
 
