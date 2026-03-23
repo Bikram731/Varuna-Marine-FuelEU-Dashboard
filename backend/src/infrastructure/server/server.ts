@@ -27,7 +27,9 @@ app.use(cors());
 app.use(express.json());
 
 // initialize database client.
-const prisma = new PrismaClient({ datasources: { db: { url: process.env.DATABASE_URL } } });
+const prisma = new PrismaClient({
+  datasourceUrl: process.env.DATABASE_URL as string
+} as any);
 
 // dependency injection wiring.
 const routeRepo = new PrismaRouteRepository(prisma);
