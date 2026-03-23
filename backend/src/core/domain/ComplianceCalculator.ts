@@ -4,6 +4,10 @@ export class ComplianceCalculator {
   public static readonly TARGET_INTENSITY = 89.3368; 
   private static readonly ENERGY_CONVERSION_FACTOR = 41000; 
 
+  public static isCompliant(ghgIntensity: number): boolean {
+    return ghgIntensity <= this.TARGET_INTENSITY;
+  }
+
   public static getEnergyInScope(fuelConsumptionTons: number): number {
     return fuelConsumptionTons * this.ENERGY_CONVERSION_FACTOR;
   }
