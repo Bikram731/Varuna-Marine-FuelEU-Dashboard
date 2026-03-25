@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import api from '../api';
+import { ShipService } from '../api';
 import { PiggyBank, ArrowDownCircle, Loader2 } from 'lucide-react';
 
 export default function BankingView() {
@@ -7,18 +7,16 @@ export default function BankingView() {
   const [isLoading, setIsLoading] = useState(false);
   const shipId = "R001"; // Default for demo
 
-  // Fetch initial banking data
   useEffect(() => {
     const fetchBanking = async () => {
       try {
-        const response = await api.get('/banking?year=2025'); 
-        // If your backend returns an array, sum it up. If it returns an object, use the balance.
-        const data = response.data;
-        if (Array.isArray(data)) {
-           const total = data.reduce((sum, item) => sum + (item.amount || 0), 0);
+        const res = await ShipService.getBankRecords(shipId);
+        // Bulletproof parsing: handles if backend returns an array of records OR a single balance object
+        if (Array.isArray(res)) {
+           const total = res.reduce((sum, item) => sum + (Number(item.amount) || Number(item.balance) || 0), 0);
            setBalance(total);
-        } else if (data && data.balance !== undefined) {
-           setBalance(data.balance);
+        } else if (res && typeof res.balance !== 'undefined') {
+           setBalance(Number(res.balance));
         }
       } catch (error) {
         console.error("Banking fetch error:", error);
@@ -28,19 +26,17 @@ export default function BankingView() {
   }, []);
 
   const handleBank = async () => {
-    setIsLoading(true); // Start spinner
+    setIsLoading(true);
     try {
-      // 1. Post to backend to save the banking record
-      await api.post('/banking', { shipId, year: 2025, amount: 5000 });
-      
-      // 2. Optimistically update the UI so it feels instant
+      await ShipService.bankSurplus({ shipId, year: 2025, amount: 5000 });
+      // Optimistic UI update to feel instantly responsive
       setBalance(prev => prev + 5000);
       alert("Surplus banked successfully!");
     } catch (error) {
       console.error("Banking error:", error);
       alert("Failed to bank surplus. Check your backend console.");
     } finally {
-      setIsLoading(false); // Stop spinner
+      setIsLoading(false);
     }
   };
 

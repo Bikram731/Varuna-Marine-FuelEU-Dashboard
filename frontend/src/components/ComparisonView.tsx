@@ -16,7 +16,7 @@ export default function ComparisonView() {
         <p className="text-slate-400 text-sm">Intensity variance vs selected baseline.</p>
       </div>
 
-      <div className="h-80 bg-slate-900 p-6 rounded-xl border border-slate-800">
+      <div className="w-full h-80 bg-slate-900 p-6 rounded-xl border border-slate-800" style={{ width: '100%', height: 350 }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data}>
             <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
